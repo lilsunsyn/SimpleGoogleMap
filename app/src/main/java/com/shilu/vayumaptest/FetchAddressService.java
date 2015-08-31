@@ -119,7 +119,7 @@ public class FetchAddressService extends IntentService {
         bundle.putString(Constants.Map.RESULT_DATA_KEY, message);
         mReceiver.send(resultCode, bundle);
     }
-
+//trest
     private void deliverResultToReceiver(int resultCode, String message, MapObject mapObject) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.Map.RESULT_DATA_MAP_KEY, mapObject);
