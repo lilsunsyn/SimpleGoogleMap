@@ -9,9 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private EditText etZipCode;
     private boolean firstEntry = true;
 
-    private ArrayList<String> addressFragments = new ArrayList<String>();
+    private ArrayList<String> addressList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +70,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 if (charSequence.toString().contains(" ") || charSequence.toString().contains(",")) {
                     if (!TextUtils.isEmpty(etAddress.getText().toString())) {
-                        addressFragments.set(0, etAddress.getText().toString());
+                        addressList.set(0, etAddress.getText().toString());
                     }
                     if (!TextUtils.isEmpty(etPostal.getText().toString())) {
-                        addressFragments.set(2, etPostal.getText().toString());
+                        addressList.set(2, etPostal.getText().toString());
                     }
                     if (!TextUtils.isEmpty(etZipCode.getText().toString())) {
-                        addressFragments.set(3, etZipCode.getText().toString());
+                        addressList.set(3, etZipCode.getText().toString());
                     }
                     if (!TextUtils.isEmpty(etStreet.getText().toString())) {
-                        addressFragments.set(1, etStreet.getText().toString());
+                        addressList.set(1, etStreet.getText().toString());
                     }
                 }
             }
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void afterTextChanged(Editable editable) {
                 String address = TextUtils.join(System.getProperty(Constants.Map.LINE_SEPARATOR),
-                        addressFragments);
+                        addressList);
 
                 if (address.toString().contains(" ") || address.toString().contains(",")) {
                     fetchAddressButtonHandler(address);
@@ -101,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // set array of length 4 and create a index position for each address which can be replaced later
         if (firstEntry) {
-            addressFragments.add(0, etAddress.getText().toString());
-            addressFragments.add(1, etStreet.getText().toString());
-            addressFragments.add(2, etPostal.getText().toString());
-            addressFragments.add(3, etZipCode.getText().toString());
+            addressList.add(0, etAddress.getText().toString());
+            addressList.add(1, etStreet.getText().toString());
+            addressList.add(2, etPostal.getText().toString());
+            addressList.add(3, etZipCode.getText().toString());
             firstEntry = false;
         }
 
@@ -143,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         intent.putExtra(Constants.Map.RECEIVER, mResultReceiver);
         intent.putExtra(Constants.Map.LOCATION_DATA_EXTRA, mLastLocation);
         intent.putExtra(Constants.Map.LOCATION_NAME, address);
+        // test condition
         intent.putExtra(Constants.Map.GET_LOCATION_FROM, Constants.Map.GET_LOCATION_FROM_LOCATION);
 
         startService(intent);

@@ -30,6 +30,7 @@ public class FetchAddressService extends IntentService {
     private static final String ERROR_NO_GEOCODER = "No geocoder available";
     private static final String ERROR_INVALID_LAT_LNG = "Invalid latitude or longitude used";
     private static final String ERROR_NO_ADDRESS_FOUND = "Sorry, no address found";
+    private int maxResult = 10;
 
     public FetchAddressService() {
         super(SERVICE_NAME);
@@ -64,13 +65,13 @@ public class FetchAddressService extends IntentService {
         try {
             if (getFrom.equals(Constants.Map.GET_LOCATION_FROM_LOCATION)) {
                 if (!TextUtils.isEmpty(locationName)) {
-                    addresses = geocoder.getFromLocationName(locationName, 1);
+                    addresses = geocoder.getFromLocationName(locationName, maxResult);
                 }
             } else {
                 addresses = geocoder.getFromLocation(
                         location.getLatitude(),
                         location.getLongitude(),
-                        1);
+                        maxResult);
             }
 
         } catch (IOException ioException) {
@@ -91,6 +92,11 @@ public class FetchAddressService extends IntentService {
             }
             deliverResultToReceiver(Constants.Map.FAILURE_RESULT, errorMessage, mapObject);
         } else {
+            for (int i = 0; i < addresses.size(); i++) {
+                Address address = addresses.get(i);
+                System.out.println("Address " + i + " " + address.getAddressLine(0));
+
+            }
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<String>();
 
@@ -119,7 +125,7 @@ public class FetchAddressService extends IntentService {
         bundle.putString(Constants.Map.RESULT_DATA_KEY, message);
         mReceiver.send(resultCode, bundle);
     }
-//trest
+
     private void deliverResultToReceiver(int resultCode, String message, MapObject mapObject) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.Map.RESULT_DATA_MAP_KEY, mapObject);
